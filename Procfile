@@ -1,2 +1,2 @@
-release: npm install && npm run knex -- migrate:latest && npm run build
+release: ./release-tasks.sh
 web: node build/server.js
