@@ -8,8 +8,12 @@ export const config: Knex.Config = {
       ? {
         filename: env.DATABASE_URL,
       }
-      : env.DATABASE_URL,
+      : {
+        connectionString: env.DATABASE_URL,
+        ssl: { rejectUnauthorized: false }
+      },
   useNullAsDefault: true,
+  
   migrations: {
     extension: 'ts',
     directory: './db/migrations',
