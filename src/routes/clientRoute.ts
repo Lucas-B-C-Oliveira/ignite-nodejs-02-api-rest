@@ -9,14 +9,23 @@ export async function clientsRoutes(app: FastifyInstance) {
   app.get(
     '/',
     async (request) => {
+      
+      try {
+        const clients = await knex('clientes')
+          .select()
 
-      const clients = await knex('clientes')
-        .select()
+        return { clients }
+        
+      } catch (error) {
 
-      return { clients }
+        console.log('erro', error)
+        return { error }
+        
+      }
+
+
     },
   )
-
 
   app.delete('/', async (request, reply) => {
     const createTransactionBodySchema = z.object({
@@ -27,10 +36,18 @@ export async function clientsRoutes(app: FastifyInstance) {
       request.body,
     )
 
-    await knex('clientes')
-      .where('_id', _id).delete()
+    try {
+      await knex('clientes')
+        .where('_id', _id).delete()
 
-    return reply.status(200).send()
+      return reply.status(200).send()
+    }
+    catch (error) {
+      console.log('erro', error)
+      return { error }
+    }
+
+
   })
 
   app.put('/', async (request, reply) => {
@@ -44,28 +61,37 @@ export async function clientsRoutes(app: FastifyInstance) {
       request.body,
     )
 
-    if (nome) {
-      await knex('clientes')
+    try {
+      
+ 
+
+      if (nome) {
+        await knex('clientes')
+          .where('_id', _id)
+          .update({
+            nome,
+          })
+      }
+
+      if (sobreNome) {
+        await knex('clientes')
+          .where('_id', _id)
+          .update({
+            sobreNome
+          })
+      }
+
+      const client = await knex('clientes')
         .where('_id', _id)
-        .update({
-          nome,
-        })
+        .first()
+
+      return reply.status(200).send({ client })
+      
     }
-
-    if (sobreNome) {
-      await knex('clientes')
-        .where('_id', _id)
-        .update({
-          sobreNome
-        })
+    catch (error) {
+      console.log('erro', error)
+      return { error }
     }
-
-
-    const client = await knex('clientes')
-      .where('_id', _id)
-      .first()
-
-    return reply.status(200).send({ client })
   })
 
   app.post('/', async (request, reply) => {
@@ -78,12 +104,18 @@ export async function clientsRoutes(app: FastifyInstance) {
       request.body,
     )
 
-    await knex('clientes').insert({
-      _id: randomUUID(),
-      nome,
-      sobreNome,
-    })
+    try {
+      await knex('clientes').insert({
+        _id: randomUUID(),
+        nome,
+        sobreNome,
+      })
 
-    return reply.status(200).send()
+      return reply.status(200).send()
+
+    } catch (error) {
+      console.log('erro', error)
+      return { error }
+    }
   })
 }
