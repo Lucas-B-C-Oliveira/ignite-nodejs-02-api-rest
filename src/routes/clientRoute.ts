@@ -8,9 +8,9 @@ import { checkSessionIdExists } from '../middlewares/check-session-id-exists'
 export async function clientsRoutes(app: FastifyInstance) {
   app.get(
     '/',
-    async (request) => {
-
-      return { message: "DEU CERTO"}
+    async (request, reply) => {
+      
+      return reply.status(200).send({ message: "DEU CERTO" })
       
       try {
         const clients = await knex('clientes')
