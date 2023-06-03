@@ -9,6 +9,8 @@ export async function clientsRoutes(app: FastifyInstance) {
   app.get(
     '/',
     async (request) => {
+
+      return { message: "DEU CERTO"}
       
       try {
         const clients = await knex('clientes')
