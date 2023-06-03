@@ -95,16 +95,17 @@ export async function clientsRoutes(app: FastifyInstance) {
   })
 
   app.post('/', async (request, reply) => {
-    const createTransactionBodySchema = z.object({
-      nome: z.string(),
-      sobreNome: z.string(),
-    })
-
-    const { nome, sobreNome } = createTransactionBodySchema.parse(
-      request.body,
-    )
-
     try {
+      const createTransactionBodySchema = z.object({
+        nome: z.string(),
+        sobreNome: z.string(),
+      })
+
+      const { nome, sobreNome } = createTransactionBodySchema.parse(
+        request.body,
+      )
+
+
       await knex('clientes').insert({
         _id: randomUUID(),
         nome,
